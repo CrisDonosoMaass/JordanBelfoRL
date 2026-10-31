@@ -1,0 +1,144 @@
+# =============================================================================
+# DRL Ensemble Trading System — Central Configuration
+# Based on: "Deep RL for Automated Stock Trading: An Ensemble Strategy" (Yang et al., 2020)
+#           "FinRL: Deep RL Framework to Automate Trading" (Liu et al., 2021)
+# =============================================================================
+
+# --- Universe of Stocks ---
+tickers:
+  # DJIA 30 constituents (updated — WBA delisted, DOW IPO 2019; replaced with AMZN, GOOGL)
+  # Alphabetically sorted, full history back to 2009 for robust training
+  - AAPL
+  - AMGN
+  - AMZN
+  - AXP
+  - BA
+  - CAT
+  - CRM
+  - CSCO
+  - CVX
+  - DIS
+  - GOOGL
+  - GS
+  - HD
+  - HON
+  - IBM
+  - INTC
+  - JNJ
+  - JPM
+  - KO
+  - MCD
+  - MMM
+  - MRK
+  - MSFT
+  - NKE
+  - PG
+  - TRV
+  - UNH
+  - V
+  - VZ
+  - WMT
+
+# --- Data Periods ---
+# Paper default: Train 2009-01 to 2015-09, Validate 2015-10 to 2015-12, Trade 2016-01 onwards
+dates:
+  train_start: "2009-01-01"
+  train_end: "2015-09-30"
+  validation_start: "2015-10-01"
+  validation_end: "2015-12-31"
+  trade_start: "2016-01-01"
+  trade_end: "2024-12-31"         # Overridable; set to "today" to use current date
+
+# --- Ensemble Rolling Window ---
+ensemble:
+  rebalance_window_months: 3      # Re-train every N months (paper: 3)
+  validation_window_months: 3     # Validation window length (paper: 3)
+
+# --- Environment Parameters ---
+environment:
+  initial_balance: 1000000        # $1,000,000 (paper default)
+  transaction_cost_pct: 0.001     # 0.1% per trade (paper default)
+  hmax: 100                       # Max shares per buy action per stock
+  reward_scaling: 0.0001          # Scale reward for numerical stability
+  turbulence_threshold: null      # null = auto-calculate from data (90th percentile)
+
+# --- Technical Indicators ---
+indicators:
+  # Default indicators from the paper
+  default:
+    - macd
+    - rsi
+    - cci
+    - adx
+  # Extended indicators (uncomment to activate)
+  # extended:
+  #   - bollinger_upper
+  #   - bollinger_lower
+  #   - ema_20
+  #   - obv
+  #   - atr
+
+# --- Model Hyperparameters (Stable-Baselines3) ---
+models:
+  ppo:
+    learning_rate: 0.00025
+    n_steps: 2048
+    batch_size: 64
+    n_epochs: 10
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_range: 0.2
+    ent_coef: 0.005
+    total_timesteps: 100000
+    policy_kwargs:
+      net_arch: [64, 64]
+
+  a2c:
+    learning_rate: 0.0007
+    n_steps: 5
+    gamma: 0.99
+    gae_lambda: 1.0
+    ent_coef: 0.005
+    vf_coef: 0.5
+    max_grad_norm: 0.5
+    total_timesteps: 100000
+    policy_kwargs:
+      net_arch: [64, 64]
+
+  ddpg:
+    learning_rate: 0.001
+    buffer_size: 50000
+    learning_starts: 100
+    batch_size: 64
+    tau: 0.005
+    gamma: 0.99
+    total_timesteps: 50000
+    policy_kwargs:
+      net_arch: [64, 64]
+
+# --- Training ---
+training:
+  seed: 42
+  device: "auto"                  # "auto" | "cuda" | "cpu"
+  save_checkpoints: true
+  checkpoint_freq: 10000          # Save model every N timesteps
+  verbose: 1                      # 0=silent, 1=info, 2=debug
+
+# --- Paths ---
+paths:
+  data_dir: "data"
+  models_dir: "models"
+  results_dir: "results"
+  logs_dir: "logs"
+  paper_trading_dir: "paper_trading"
+
+# --- Paper Trading ---
+paper_trading:
+  initial_balance: 100000         # Paper trading starts with $100k
+  benchmark_ticker: "^DJI"        # DJIA index for comparison
+
+# --- Logging ---
+logging:
+  level: "INFO"                   # DEBUG | INFO | WARNING | ERROR
+  log_to_file: true
+  log_format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

@@ -1,0 +1,128 @@
+# =============================================================================
+# DRL Ensemble Trading System — Quick Test / Demo Configuration
+# Use this configuration for fast end-to-end verification (~2 minutes).
+#
+# Usage:
+#   python train.py --config config_quick.yaml
+#   python evaluate.py --config config_quick.yaml
+#   python paper_trade.py --config config_quick.yaml
+# =============================================================================
+
+tickers:
+  - AAPL
+  - AMGN
+  - AMZN
+  - AXP
+  - BA
+  - CAT
+  - CRM
+  - CSCO
+  - CVX
+  - DIS
+  - GOOGL
+  - GS
+  - HD
+  - HON
+  - IBM
+  - INTC
+  - JNJ
+  - JPM
+  - KO
+  - MCD
+  - MMM
+  - MRK
+  - MSFT
+  - NKE
+  - PG
+  - TRV
+  - UNH
+  - V
+  - VZ
+  - WMT
+
+dates:
+  train_start: "2022-01-01"
+  train_end: "2023-06-30"
+  validation_start: "2023-04-01"
+  validation_end: "2023-06-30"
+  trade_start: "2023-07-01"
+  trade_end: "2023-12-31"
+
+ensemble:
+  rebalance_window_months: 3
+  validation_window_months: 3
+
+environment:
+  initial_balance: 1000000
+  transaction_cost_pct: 0.001
+  hmax: 100
+  reward_scaling: 0.0001
+  turbulence_threshold: null
+
+indicators:
+  default:
+    - macd
+    - rsi
+    - cci
+    - adx
+
+models:
+  ppo:
+    learning_rate: 0.00025
+    n_steps: 256
+    batch_size: 64
+    n_epochs: 4
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_range: 0.2
+    ent_coef: 0.005
+    total_timesteps: 1000
+    policy_kwargs:
+      net_arch: [64, 64]
+
+  a2c:
+    learning_rate: 0.0007
+    n_steps: 5
+    gamma: 0.99
+    gae_lambda: 1.0
+    ent_coef: 0.005
+    vf_coef: 0.5
+    max_grad_norm: 0.5
+    total_timesteps: 1000
+    policy_kwargs:
+      net_arch: [64, 64]
+
+  ddpg:
+    learning_rate: 0.001
+    buffer_size: 5000
+    learning_starts: 100
+    batch_size: 64
+    tau: 0.005
+    gamma: 0.99
+    total_timesteps: 500
+    policy_kwargs:
+      net_arch: [64, 64]
+
+training:
+  seed: 42
+  device: "auto"
+  save_checkpoints: true
+  checkpoint_freq: 10000
+  verbose: 0
+
+paths:
+  data_dir: "data"
+  models_dir: "models"
+  results_dir: "results"
+  logs_dir: "logs"
+  paper_trading_dir: "paper_trading"
+
+paper_trading:
+  initial_balance: 100000
+  benchmark_ticker: "^DJI"
+
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+

@@ -1,0 +1,33 @@
+# =============================================================================
+# DRL Ensemble Trading System — Dependencies
+# Compatible versions for Python 3.10+ on Windows
+# =============================================================================
+
+# Deep Reinforcement Learning
+stable-baselines3>=2.1.0,<3.0.0
+sb3-contrib>=2.1.0,<3.0.0
+gymnasium>=0.29.0,<1.0.0
+shimmy>=1.0.0,<2.0.0
+
+# PyTorch (CPU+CUDA; user has MX330 CUDA GPU)
+torch>=2.0.0,<3.0.0
+
+# Data
+yfinance>=0.2.28,<1.0.0
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.0.0
+
+# Technical Analysis
+ta>=0.10.2,<1.0.0
+
+# Visualization
+matplotlib>=3.7.0,<4.0.0
+plotly>=5.15.0,<6.0.0
+kaleido>=0.2.1,<1.0.0
+
+# Configuration
+pyyaml>=6.0,<7.0
+
+# Utilities
+tqdm>=4.65.0,<5.0.0
+rich>=13.0.0
