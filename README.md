@@ -264,5 +264,4 @@ Then add `"my_indicator"` to the `indicators.default` list in `config.yaml`.
 ## Disclaimer
 
 This software is for **educational and research purposes only**. It does not constitute financial advice. Trading stocks involves risk. Past performance does not guarantee future results. Always do your own research before making investment decisions.
-#   J o r d a n B e l f o R L  
- 
+#JordanBelfoRL
